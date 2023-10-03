@@ -1,8 +1,8 @@
 ﻿internal interface IUniversity
 {
-    List<IPerson> Persons { get; }
-    List<Student> Students { get; }
-    List<Teacher> Teachers { get; }
+    IEnumerable<IPerson> Persons { get; }
+    IEnumerable<Student> Students { get; }
+    IEnumerable<Teacher> Teachers { get; }
 
     void Add(IPerson person);
     void Remove(IPerson person);

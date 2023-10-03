@@ -1,30 +1,18 @@
 ﻿internal class University : IUniversity
 {
-    public List<IPerson> Persons { get; } = new List<IPerson>();
-    public List<Student> Students { get; } = new List<Student>();
-    public List<Teacher> Teachers { get; } = new List<Teacher>();
+    public List<IPerson> _persons { get; } = new List<IPerson>();
 
+    public IEnumerable<IPerson> Persons => _persons;
+    public IEnumerable<Student> Students => Persons.OfType<Student>();
+    public IEnumerable<Teacher> Teachers => Persons.OfType<Teacher>();
 
-    public void Add(IPerson person)
-    {
-        if (person.GetType().ToString() == "Student") Students.Add((Student)person);
-        else Teachers.Add((Teacher)person);
-        Persons.Add(person);
-    }
+    public void Add(IPerson person) => _persons.Add(person);
 
-    public void Remove(IPerson person)
-    {
-        Persons.RemoveAt(Persons.FindIndex(per => per == person));
-        if (person.GetType().ToString() == "Student") Students.RemoveAt(Students.FindIndex(stud => stud == person));
-        else Teachers.RemoveAt(Teachers.FindIndex(teach => teach == person));
-    }
+    public void Remove(IPerson person) => _persons.RemoveAt(_persons.FindIndex(per => per == person));
 
+    public IEnumerable<IPerson> FindByLastName(string lastName) => _persons.FindAll(per => per.Lastname == lastName);
 
-
-    public IEnumerable<IPerson> FindByLastName(string lastName) => Persons.FindAll(per => per.Lastname == lastName);
-
-
-    public IEnumerable<Student> FindByAvrPoint(float avrPoint) => Students.FindAll(stud => stud.AverageScore > avrPoint);
+    public IEnumerable<Student> FindByAvrPoint(float avrPoint) => Students.Where(stud => stud.AverageScore > avrPoint);
 
     public void ShowAllPersons()
     {
@@ -33,11 +21,11 @@
 
     public void ShowAllStudents()
     {
-        foreach (Student stud in Students.OrderBy(obj => obj.Lastname).ToArray()) Console.WriteLine(stud.ToString()); 
+        foreach (Student stud in Students.OrderBy(obj => obj.Lastname).ToArray()) Console.WriteLine(stud.ToString());
     }
     public void ShowAllTeachers()
     {
-        foreach (Teacher teach in Teachers.OrderBy(obj => obj.Lastname).ToArray()) Console.WriteLine(teach.ToString()); 
+        foreach (Teacher teach in Teachers.OrderBy(obj => obj.Lastname).ToArray()) Console.WriteLine(teach.ToString());
     }
 
 }
